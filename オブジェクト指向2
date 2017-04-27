@@ -1,0 +1,76 @@
+<html>
+ <head>
+  <title></title>
+ </head>
+ <body>
+   <?php
+   abstract class base{
+     abstract protected function load();
+     public function show(){}
+   }
+   ?>
+   <?php
+   class Human extends base{
+     private $table;
+     function load(){
+       try{$pdo_object=new PDO('mysql:host=localhost;dbname=p;charset=utf8','yuiyuigahama','0618');
+       $table="SELECT*FROM human";
+       $query= $pdo_object->prepare($table);
+       $query-> execute();
+       $result1=$query->fetchall(PDO::FETCH_ASSOC);
+       return $result1;
+       }catch (PDOException $Exception) {
+         die('接続に失敗しました:'.$Exception->getMessage());
+       }
+     }
+     function show(){
+       $result=$this->load();
+       if($result!=null){
+       echo "    "."<br>";
+       foreach ($result as $value){
+           echo "名前:{$value["name"]}"."<br>";
+           echo "出身地:{$value["localplace"]}"."<br>";
+           echo "<br>";
+        }
+      }
+     }
+   }
+   ?>
+   <?php
+   class Station extends base{
+     private $table;
+     function load(){
+       try{
+       $pdo_object=new PDO('mysql:host=localhost;dbname=p;charset=utf8','yuiyuigahama','0618');
+       $table="SELECT*FROM station";
+       $query= $pdo_object->prepare($table);
+       $query-> execute();
+       $result1=$query->fetchall(PDO::FETCH_ASSOC);
+       return $result1;
+       }
+       catch (PDOException $Exception) {
+         die('接続に失敗しました:'.$Exception->getMessage());
+       }
+     }
+    function show(){
+       $result=$this->load();
+       if($result!=null){
+         echo "    "."<br>";
+         foreach ($result as $value){
+             echo "駅名:{$value["station"]}"."<br>";
+             echo "路線名:{$value["line"]}"."<br>";
+             echo "<br>";
+          }
+       }
+     }
+   }
+   ?>
+   <?php
+       $human=new Human();
+       $station=new Station();
+       $human->show();
+       $station->show();
+       $pdo_object=null;
+   ?>
+ </body>
+</html>
